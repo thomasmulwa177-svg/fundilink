@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 function Home() {
@@ -25,10 +24,15 @@ function Signup() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Signup Page</h1>
+
       <input placeholder="Email" />
+
       <br /><br />
-      <input placeholder="Password" type="password" />
+
+      <input type="password" placeholder="Password" />
+
       <br /><br />
+
       <button>Create Account</button>
     </div>
   );
@@ -38,10 +42,15 @@ function Login() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Login Page</h1>
+
       <input placeholder="Email" />
+
       <br /><br />
-      <input placeholder="Password" type="password" />
+
+      <input type="password" placeholder="Password" />
+
       <br /><br />
+
       <button>Login</button>
     </div>
   );
