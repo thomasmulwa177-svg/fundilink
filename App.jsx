@@ -1,39 +1,19 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 function Home() {
-  const navigate = useNavigate();
-
   return (
     <div style={{ padding: 20 }}>
-      <h1>FundiLink Kenya</h1>
+      <h1>FundiLink</h1>
 
-      <button onClick={() => navigate("/signup")}>
-        Signup
-      </button>
+      <div style={{ display: "flex", gap: 10 }}>
+        <Link to="/login">
+          <button>Login</button>
+        </Link>
 
-      <br /><br />
-
-      <button onClick={() => navigate("/login")}>
-        Login
-      </button>
-    </div>
-  );
-}
-
-function Signup() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>Signup Page</h1>
-
-      <input placeholder="Email" />
-
-      <br /><br />
-
-      <input type="password" placeholder="Password" />
-
-      <br /><br />
-
-      <button>Create Account</button>
+        <Link to="/signup">
+          <button>Signup</button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -56,16 +36,22 @@ function Login() {
   );
 }
 
-function AdminDashboard() {
-  return <h1>Admin Dashboard</h1>;
-}
+function Signup() {
+  return (
+    <div style={{ padding: 20 }}>
+      <h1>Signup Page</h1>
 
-function FundiDashboard() {
-  return <h1>Fundi Dashboard</h1>;
-}
+      <input placeholder="Email" />
 
-function ClientDashboard() {
-  return <h1>Client Dashboard</h1>;
+      <br /><br />
+
+      <input type="password" placeholder="Password" />
+
+      <br /><br />
+
+      <button>Create Account</button>
+    </div>
+  );
 }
 
 export default function App() {
@@ -73,11 +59,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/fundi" element={<FundiDashboard />} />
-        <Route path="/client" element={<ClientDashboard />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
