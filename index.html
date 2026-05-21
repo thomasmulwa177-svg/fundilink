@@ -22,22 +22,30 @@
     import React from "react";
     import ReactDOM from "react-dom/client";
 
-    const path = window.location.pathname;
+    const route = window.location.hash;
 
     function Page() {
-      if (path === "/admin") {
+      if (route === "#/admin") {
         return React.createElement("h1", null, "Admin Dashboard");
       }
 
-      if (path === "/fundi") {
+      if (route === "#/fundi") {
         return React.createElement("h1", null, "Fundi Dashboard");
       }
 
-      if (path === "/client") {
+      if (route === "#/client") {
         return React.createElement("h1", null, "Client Dashboard");
       }
 
-      return React.createElement("h1", null, "FundiLink Home");
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("h1", null, "FundiLink Home"),
+        React.createElement("p", null, "Use routes:"),
+        React.createElement("p", null, "/#/admin"),
+        React.createElement("p", null, "/#/fundi"),
+        React.createElement("p", null, "/#/client")
+      );
     }
 
     ReactDOM.createRoot(document.getElementById("root")).render(
