@@ -1,13 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FundiLink</title>
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FundiLink</title>
 
-    <script type="module" src="/App.jsx"></script>
-  </body>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18",
+      "react-dom/client": "https://esm.sh/react-dom@18/client",
+      "react-router-dom": "https://esm.sh/react-router-dom@6"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="module">
+    import React from "react";
+    import ReactDOM from "react-dom/client";
+    import {
+      BrowserRouter,
+      Routes,
+      Route
+    } from "react-router-dom";
+
+    function AdminDashboard() {
+      return React.createElement("h1", null, "Admin Dashboard");
+    }
+
+    function FundiDashboard() {
+      return React.createElement("h1", null, "Fundi Dashboard");
+    }
+
+    function ClientDashboard() {
+      return React.createElement("h1", null, "Client Dashboard");
+    }
+
+    function Home() {
+      return React.createElement("h1", null, "FundiLink Home");
+    }
+
+    function App() {
+      return React.createElement(
+        BrowserRouter,
+        null,
+        React.createElement(
+          Routes,
+          null,
+          React.createElement(Route, {
+            path: "/",
+            element: React.createElement(Home)
+          }),
+          React.createElement(Route, {
+            path: "/admin",
+            element: React.createElement(AdminDashboard)
+          }),
+          React.createElement(Route, {
+            path: "/fundi",
+            element: React.createElement(FundiDashboard)
+          }),
+          React.createElement(Route, {
+            path: "/client",
+            element: React.createElement(ClientDashboard)
+          })
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(
+      React.createElement(App)
+    );
+  </script>
+</body>
 </html>
