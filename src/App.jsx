@@ -9,7 +9,9 @@ import {
 import {
   collection,
   addDoc,
-  getDocs,
+  onSnapshot,
+  query,
+  orderBy,
 } from "firebase/firestore";
 
 import { auth, db } from "./firebase";
@@ -20,27 +22,32 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
-
   const [user, setUser] = useState(null);
 
   // JOBS
+  const [jobs, setJobs] = useState([]);
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
-  const [jobs, setJobs] = useState([]);
 
-  // LOAD JOBS
-  const loadJobs = async () => {
-    try {
-      const snapshot = await getDocs(collection(db, "jobs"));
+  // ---------------- LIVE JOBS ----------------
+  const loadJobs = () => {
+    const q = query(
+      collection(db, "jobs"),
+      orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
       const list = [];
-      snapshot.forEach((doc) => list.push(doc.data()));
+
+      snapshot.forEach((doc) => {
+        list.push(doc.data());
+      });
+
       setJobs(list);
-    } catch (err) {
-      alert(err.message);
-    }
+    });
   };
 
-  // SIGNUP
+  // ---------------- SIGNUP ----------------
   const signup = async () => {
     try {
       const result = await createUserWithEmailAndPassword(
@@ -52,19 +59,20 @@ export default function App() {
       await addDoc(collection(db, "users"), {
         email,
         role,
-        createdAt: new Date(),
+        plan: role === "fundi" ? "starter" : "customer",
+        createdAt: Date.now(),
       });
 
       setUser(result.user);
-      await loadJobs();
+      loadJobs();
 
-      alert("Account created");
+      alert("Account created successfully");
     } catch (err) {
       alert(err.message);
     }
   };
 
-  // LOGIN
+  // ---------------- LOGIN ----------------
   const login = async () => {
     try {
       const result = await signInWithEmailAndPassword(
@@ -74,7 +82,7 @@ export default function App() {
       );
 
       setUser(result.user);
-      await loadJobs();
+      loadJobs();
 
       alert("Login successful");
     } catch (err) {
@@ -82,34 +90,32 @@ export default function App() {
     }
   };
 
-  // LOGOUT
+  // ---------------- LOGOUT ----------------
   const logout = async () => {
     await signOut(auth);
     setUser(null);
   };
 
-  // POST JOB
+  // ---------------- POST JOB ----------------
   const postJob = async () => {
     try {
       await addDoc(collection(db, "jobs"), {
         title: jobTitle,
         description: jobDescription,
         customer: user.email,
-        createdAt: new Date(),
+        createdAt: Date.now(),
       });
-
-      alert("Job posted successfully");
 
       setJobTitle("");
       setJobDescription("");
 
-      await loadJobs();
+      alert("Job posted successfully");
     } catch (err) {
       alert(err.message);
     }
   };
 
-  // CUSTOMER DASHBOARD
+  // ================= CUSTOMER DASHBOARD =================
   if (user && role === "customer") {
     return (
       <div style={container}>
@@ -117,17 +123,17 @@ export default function App() {
         <p>{user.email}</p>
 
         <div style={card}>
-          <h3>Post Job</h3>
+          <h3>Post a Job</h3>
 
           <input
-            placeholder="Job title"
+            placeholder="Job Title"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             style={input}
           />
 
           <textarea
-            placeholder="Job description"
+            placeholder="Job Description"
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             style={textarea}
@@ -145,12 +151,32 @@ export default function App() {
     );
   }
 
-  // FUNDI DASHBOARD
+  // ================= FUNDI DASHBOARD =================
   if (user && role === "fundi") {
     return (
       <div style={container}>
         <h1>Fundi Dashboard</h1>
         <p>{user.email}</p>
+
+        <div style={card}>
+          <h3>Join Fundi Plans</h3>
+
+          <button style={button}>
+            Starter Plan - KES 200
+          </button>
+
+          <button style={greenBtn}>
+            Premium Plan - KES 500
+          </button>
+
+          <button style={darkBtn}>
+            Pro Plan - KES 1500
+          </button>
+
+          <p>
+            Upgrade to appear higher, get more jobs, and direct clients.
+          </p>
+        </div>
 
         <div style={card}>
           <h3>Available Jobs</h3>
@@ -161,7 +187,7 @@ export default function App() {
             <div key={i} style={jobCard}>
               <h4>{job.title}</h4>
               <p>{job.description}</p>
-              <p>Customer: {job.customer}</p>
+              <p><b>Client:</b> {job.customer}</p>
 
               <button style={greenBtn}>
                 Apply Job
@@ -177,15 +203,20 @@ export default function App() {
     );
   }
 
-  // ADMIN DASHBOARD
+  // ================= ADMIN DASHBOARD =================
   if (user && role === "admin") {
     return (
       <div style={container}>
         <h1>Admin Dashboard</h1>
 
         <div style={card}>
-          <h3>System Control</h3>
-          <p>Manage users, jobs, payments</p>
+          <h3>System Overview</h3>
+          <p>Manage users, jobs, payments, fundis</p>
+        </div>
+
+        <div style={card}>
+          <h3>Jobs Posted</h3>
+          <p>{jobs.length} jobs in system</p>
         </div>
 
         <button style={logoutBtn} onClick={logout}>
@@ -195,10 +226,10 @@ export default function App() {
     );
   }
 
-  // LOGIN PAGE
+  // ================= LOGIN PAGE =================
   return (
     <div style={container}>
-      <h1>FundiLink LIVE</h1>
+      <h1>FundiLink Marketplace</h1>
 
       <select
         value={role}
@@ -218,8 +249,8 @@ export default function App() {
       />
 
       <input
-        type="password"
         placeholder="Password"
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         style={input}
@@ -236,7 +267,8 @@ export default function App() {
   );
 }
 
-// STYLES
+// ================= STYLES =================
+
 const container = {
   maxWidth: "500px",
   margin: "auto",
@@ -284,6 +316,15 @@ const greenBtn = {
   width: "100%",
   padding: "12px",
   background: "#16a34a",
+  color: "white",
+  border: "none",
+  marginBottom: "10px",
+};
+
+const darkBtn = {
+  width: "100%",
+  padding: "12px",
+  background: "#111827",
   color: "white",
   border: "none",
   marginBottom: "10px",
