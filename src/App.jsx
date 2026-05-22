@@ -1,11 +1,16 @@
 import { useState } from "react";
 
 export default function App() {
-  const [role, setRole] = useState("customer");
+  const [page, setPage] = useState("home");
 
   return (
-    <div style={{ fontFamily: "Arial", background: "#f4f4f4", minHeight: "100vh" }}>
-      
+    <div
+      style={{
+        fontFamily: "Arial",
+        background: "#f1f5f9",
+        minHeight: "100vh",
+      }}
+    >
       {/* HEADER */}
       <div
         style={{
@@ -14,42 +19,28 @@ export default function App() {
           padding: "15px",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
         <h2>FundiLink</h2>
 
-        <div>
-          <button
-            onClick={() => setRole("customer")}
-            style={{
-              marginRight: "10px",
-              padding: "10px",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Customer
-          </button>
-
-          <button
-            onClick={() => setRole("admin")}
-            style={{
-              padding: "10px",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Admin
-          </button>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <button onClick={() => setPage("home")}>Home</button>
+          <button onClick={() => setPage("fundis")}>Fundis</button>
+          <button onClick={() => setPage("jobs")}>Post Job</button>
+          <button onClick={() => setPage("admin")}>Admin</button>
         </div>
       </div>
 
-      {/* CUSTOMER PAGE */}
-      {role === "customer" && (
+      {/* HOME PAGE */}
+      {page === "home" && (
         <div style={{ padding: "20px" }}>
           <h1>Find Trusted Fundis Near You</h1>
 
+          <p>
+            Search electricians, CCTV technicians, plumbers, welders and more.
+          </p>
+
           <div
             style={{
               background: "white",
@@ -58,8 +49,9 @@ export default function App() {
               marginTop: "20px",
             }}
           >
-            <h3>Electrician</h3>
-            <p>Experienced electrical installations and repairs.</p>
+            <h3>Electrical Installation</h3>
+            <p>Professional electrical services.</p>
+
             <button
               style={{
                 background: "green",
@@ -67,7 +59,6 @@ export default function App() {
                 border: "none",
                 padding: "10px",
                 borderRadius: "5px",
-                cursor: "pointer",
               }}
             >
               Hire Fundi
@@ -82,8 +73,9 @@ export default function App() {
               marginTop: "20px",
             }}
           >
-            <h3>CCTV Technician</h3>
-            <p>Professional CCTV installation services.</p>
+            <h3>CCTV Installation</h3>
+            <p>Trusted CCTV technicians.</p>
+
             <button
               style={{
                 background: "green",
@@ -91,23 +83,36 @@ export default function App() {
                 border: "none",
                 padding: "10px",
                 borderRadius: "5px",
-                cursor: "pointer",
               }}
             >
               Hire Fundi
             </button>
           </div>
+        </div>
+      )}
 
-          {/* MPESA SECTION */}
+      {/* FUNDI PAGE */}
+      {page === "fundis" && (
+        <div style={{ padding: "20px" }}>
+          <h1>Join as a Fundi</h1>
+
           <div
             style={{
               background: "white",
               padding: "20px",
               borderRadius: "10px",
-              marginTop: "30px",
+              marginTop: "20px",
             }}
           >
-            <h2>M-PESA Payment</h2>
+            <input
+              type="text"
+              placeholder="Full Name"
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+              }}
+            />
 
             <input
               type="text"
@@ -120,8 +125,55 @@ export default function App() {
             />
 
             <input
-              type="number"
-              placeholder="Amount"
+              type="text"
+              placeholder="Service Offered"
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <input
+              type="password"
+              placeholder="Create Password"
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <button
+              style={{
+                width: "100%",
+                background: "#2563eb",
+                color: "white",
+                border: "none",
+                padding: "12px",
+                borderRadius: "5px",
+              }}
+            >
+              Register Fundi
+            </button>
+          </div>
+
+          {/* MPESA PAYMENT */}
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              marginTop: "20px",
+            }}
+          >
+            <h2>Platform Joining Fee</h2>
+
+            <p>Pay KES 500 via M-PESA to activate account.</p>
+
+            <input
+              type="text"
+              placeholder="M-PESA Phone Number"
               style={{
                 width: "100%",
                 padding: "12px",
@@ -134,10 +186,9 @@ export default function App() {
                 width: "100%",
                 background: "#16a34a",
                 color: "white",
-                padding: "12px",
                 border: "none",
+                padding: "12px",
                 borderRadius: "5px",
-                cursor: "pointer",
               }}
             >
               Pay with M-PESA
@@ -146,8 +197,96 @@ export default function App() {
         </div>
       )}
 
+      {/* JOB POSTING PAGE */}
+      {page === "jobs" && (
+        <div style={{ padding: "20px" }}>
+          <h1>Post a Job</h1>
+
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              marginTop: "20px",
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Job Title"
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <textarea
+              placeholder="Describe the work needed"
+              style={{
+                width: "100%",
+                padding: "12px",
+                height: "120px",
+                marginBottom: "10px",
+              }}
+            ></textarea>
+
+            <input
+              type="text"
+              placeholder="Location"
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <button
+              style={{
+                width: "100%",
+                background: "#0f172a",
+                color: "white",
+                border: "none",
+                padding: "12px",
+                borderRadius: "5px",
+              }}
+            >
+              Post Job
+            </button>
+          </div>
+
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              marginTop: "20px",
+            }}
+          >
+            <h2>Available Jobs</h2>
+
+            <p>
+              <strong>Need CCTV Installation</strong>
+            </p>
+
+            <p>Location: Nairobi</p>
+
+            <button
+              style={{
+                background: "#2563eb",
+                color: "white",
+                border: "none",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            >
+              Apply Job
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ADMIN PAGE */}
-      {role === "admin" && (
+      {page === "admin" && (
         <div style={{ padding: "20px" }}>
           <h1>Admin Dashboard</h1>
 
@@ -166,17 +305,6 @@ export default function App() {
                 borderRadius: "10px",
               }}
             >
-              <h3>Total Users</h3>
-              <h2>120</h2>
-            </div>
-
-            <div
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "10px",
-              }}
-            >
               <h3>Total Fundis</h3>
               <h2>45</h2>
             </div>
@@ -188,45 +316,20 @@ export default function App() {
                 borderRadius: "10px",
               }}
             >
-              <h3>Total Payments</h3>
-              <h2>KES 45,000</h2>
+              <h3>Total Jobs</h3>
+              <h2>12</h2>
             </div>
-          </div>
 
-          {/* FUNDI MANAGEMENT */}
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: "10px",
-              marginTop: "30px",
-            }}
-          >
-            <h2>Manage Fundis</h2>
-
-            <table width="100%" style={{ marginTop: "20px" }}>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Service</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>John Mwangi</td>
-                  <td>Electrical</td>
-                  <td>Approved</td>
-                </tr>
-
-                <tr>
-                  <td>Kevin Otieno</td>
-                  <td>CCTV</td>
-                  <td>Pending</td>
-                </tr>
-              </tbody>
-            </table>
+            <div
+              style={{
+                background: "white",
+                padding: "20px",
+                borderRadius: "10px",
+              }}
+            >
+              <h3>Total Revenue</h3>
+              <h2>KES 25,000</h2>
+            </div>
           </div>
         </div>
       )}
