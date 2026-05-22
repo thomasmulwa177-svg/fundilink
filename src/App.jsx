@@ -15,12 +15,17 @@ import { auth, db } from "./firebase";
 
 export default function App() {
 
+  // AUTH
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // ROLE
   const [role, setRole] = useState("customer");
 
+  // USER
   const [user, setUser] = useState(null);
 
+  // JOBS
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
 
@@ -36,6 +41,7 @@ export default function App() {
           password
         );
 
+      // SAVE USER
       await addDoc(collection(db, "users"), {
         email,
         role,
@@ -44,7 +50,7 @@ export default function App() {
 
       setUser(result.user);
 
-      alert("Account created");
+      alert("Account created successfully");
 
     } catch (error) {
 
@@ -112,36 +118,144 @@ export default function App() {
   if (user && role === "customer") {
 
     return (
-      <div style={{ padding: "20px" }}>
+      <div style={container}>
 
         <h1>Customer Dashboard</h1>
 
         <p>{user.email}</p>
 
-        <input
-          placeholder="Job title"
-          value={jobTitle}
-          onChange={(e) =>
-            setJobTitle(e.target.value)
-          }
-          style={input}
-        />
+        <div style={card}>
 
-        <textarea
-          placeholder="Job description"
-          value={jobDescription}
-          onChange={(e) =>
-            setJobDescription(e.target.value)
-          }
-          style={textarea}
-        ></textarea>
+          <h3>Post Job</h3>
+
+          <input
+            placeholder="Job Title"
+            value={jobTitle}
+            onChange={(e) =>
+              setJobTitle(e.target.value)
+            }
+            style={input}
+          />
+
+          <textarea
+            placeholder="Describe the work"
+            value={jobDescription}
+            onChange={(e) =>
+              setJobDescription(e.target.value)
+            }
+            style={textarea}
+          ></textarea>
+
+          <button
+            style={button}
+            onClick={postJob}
+          >
+            Post Job
+          </button>
+
+        </div>
 
         <button
-          style={button}
-          onClick={postJob}
+          style={logoutBtn}
+          onClick={logout}
         >
-          Post Job
+          Logout
         </button>
+
+      </div>
+    );
+  }
+
+  // FUNDI DASHBOARD
+  if (user && role === "fundi") {
+
+    return (
+      <div style={container}>
+
+        <h1>Fundi Dashboard</h1>
+
+        <p>{user.email}</p>
+
+        <div style={card}>
+
+          <h3>Membership Plans</h3>
+
+          <button style={button}>
+            Starter KES 200
+          </button>
+
+          <button style={greenBtn}>
+            Premium KES 500
+          </button>
+
+          <button style={darkBtn}>
+            Pro KES 1500
+          </button>
+
+        </div>
+
+        <div style={card}>
+
+          <h3>Available Jobs</h3>
+
+          <p>Jobs from customers will appear here.</p>
+
+        </div>
+
+        <button
+          style={logoutBtn}
+          onClick={logout}
+        >
+          Logout
+        </button>
+
+      </div>
+    );
+  }
+
+  // ADMIN DASHBOARD
+  if (user && role === "admin") {
+
+    return (
+      <div style={container}>
+
+        <h1>Admin Dashboard</h1>
+
+        <div style={card}>
+
+          <h3>Platform Analytics</h3>
+
+          <p>
+            Manage users, jobs and payments.
+          </p>
+
+        </div>
+
+        <div style={card}>
+
+          <h3>Total Revenue</h3>
+
+          <p>KES 0</p>
+
+        </div>
+
+        <div style={card}>
+
+          <h3>Admin Controls</h3>
+
+          <button style={button}>
+            View Users
+          </button>
+
+          <button style={greenBtn}>
+            View Jobs
+          </button>
+
+          <button style={darkBtn}>
+            View Payments
+          </button>
+
+        </div>
 
         <button
           style={logoutBtn}
@@ -174,6 +288,10 @@ export default function App() {
 
         <option value="fundi">
           Fundi
+        </option>
+
+        <option value="admin">
+          Admin
         </option>
 
       </select>
@@ -219,10 +337,17 @@ export default function App() {
 // STYLES
 
 const container = {
-  maxWidth: "400px",
+  maxWidth: "500px",
   margin: "auto",
-  padding: "30px",
+  padding: "20px",
   fontFamily: "Arial",
+};
+
+const card = {
+  background: "#f5f5f5",
+  padding: "20px",
+  borderRadius: "10px",
+  marginBottom: "20px",
 };
 
 const input = {
@@ -251,6 +376,15 @@ const greenBtn = {
   width: "100%",
   padding: "12px",
   background: "#16a34a",
+  color: "white",
+  border: "none",
+  marginBottom: "10px",
+};
+
+const darkBtn = {
+  width: "100%",
+  padding: "12px",
+  background: "#111827",
   color: "white",
   border: "none",
   marginBottom: "10px",
