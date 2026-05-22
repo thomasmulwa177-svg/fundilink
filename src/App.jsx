@@ -1,188 +1,173 @@
 import { useState } from "react";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 
-import { auth } from "./firebase";
+import {
+  collection,
+  addDoc,
+} from "firebase/firestore";
+
+import { auth, db } from "./firebase";
 
 export default function App() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("customer");
 
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState("customer");
+
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
 
   // SIGNUP
   const signup = async () => {
+
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
+
+      const result =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      await addDoc(collection(db, "users"), {
         email,
-        password
-      );
+        role,
+        createdAt: new Date(),
+      });
 
       setUser(result.user);
 
-      alert("Account created successfully");
+      alert("Account created");
+
     } catch (error) {
+
       alert(error.message);
+
     }
   };
 
   // LOGIN
   const login = async () => {
+
     try {
-      const result = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+
+      const result =
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
       setUser(result.user);
 
       alert("Login successful");
+
     } catch (error) {
+
       alert(error.message);
+
     }
   };
 
   // LOGOUT
   const logout = async () => {
+
     await signOut(auth);
 
     setUser(null);
   };
 
-  // DASHBOARDS
+  // POST JOB
+  const postJob = async () => {
+
+    try {
+
+      await addDoc(collection(db, "jobs"), {
+        title: jobTitle,
+        description: jobDescription,
+        customer: user.email,
+        createdAt: new Date(),
+      });
+
+      alert("Job posted successfully");
+
+      setJobTitle("");
+      setJobDescription("");
+
+    } catch (error) {
+
+      alert(error.message);
+
+    }
+  };
+
+  // CUSTOMER DASHBOARD
   if (user && role === "customer") {
+
     return (
-      <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <div style={{ padding: "20px" }}>
+
         <h1>Customer Dashboard</h1>
 
-        <p>Logged in as: {user.email}</p>
+        <p>{user.email}</p>
 
-        <div style={card}>
-          <h3>Post a Job</h3>
+        <input
+          placeholder="Job title"
+          value={jobTitle}
+          onChange={(e) =>
+            setJobTitle(e.target.value)
+          }
+          style={input}
+        />
 
-          <input
-            placeholder="Job title"
-            style={input}
-          />
+        <textarea
+          placeholder="Job description"
+          value={jobDescription}
+          onChange={(e) =>
+            setJobDescription(e.target.value)
+          }
+          style={textarea}
+        ></textarea>
 
-          <textarea
-            placeholder="Describe the work"
-            style={textarea}
-          ></textarea>
+        <button
+          style={button}
+          onClick={postJob}
+        >
+          Post Job
+        </button>
 
-          <button style={button}>
-            Post Job
-          </button>
-        </div>
-
-        <div style={card}>
-          <h3>Search Fundis</h3>
-
-          <button style={button}>
-            Find Electricians
-          </button>
-
-          <button style={button}>
-            Find CCTV Experts
-          </button>
-        </div>
-
-        <button style={logoutBtn} onClick={logout}>
+        <button
+          style={logoutBtn}
+          onClick={logout}
+        >
           Logout
         </button>
-      </div>
-    );
-  }
 
-  if (user && role === "fundi") {
-    return (
-      <div style={{ padding: "20px", fontFamily: "Arial" }}>
-        <h1>Fundi Dashboard</h1>
-
-        <p>Logged in as: {user.email}</p>
-
-        <div style={card}>
-          <h3>Membership Payment</h3>
-
-          <p>Pay KES 500 to activate your account.</p>
-
-          <input
-            placeholder="M-PESA Number"
-            style={input}
-          />
-
-          <button style={greenBtn}>
-            Pay with M-PESA
-          </button>
-        </div>
-
-        <div style={card}>
-          <h3>Available Jobs</h3>
-
-          <p>CCTV installation in Nairobi</p>
-
-          <button style={button}>
-            Apply Job
-          </button>
-        </div>
-
-        <button style={logoutBtn} onClick={logout}>
-          Logout
-        </button>
-      </div>
-    );
-  }
-
-  if (user && role === "admin") {
-    return (
-      <div style={{ padding: "20px", fontFamily: "Arial" }}>
-        <h1>Admin Dashboard</h1>
-
-        <div style={card}>
-          <h3>Total Users</h3>
-          <p>120</p>
-        </div>
-
-        <div style={card}>
-          <h3>Total Fundis</h3>
-          <p>45</p>
-        </div>
-
-        <div style={card}>
-          <h3>Total Revenue</h3>
-          <p>KES 25,000</p>
-        </div>
-
-        <button style={logoutBtn} onClick={logout}>
-          Logout
-        </button>
       </div>
     );
   }
 
   // LOGIN PAGE
   return (
-    <div
-      style={{
-        padding: "30px",
-        maxWidth: "400px",
-        margin: "auto",
-        fontFamily: "Arial",
-      }}
-    >
+    <div style={container}>
+
       <h1>FundiLink LIVE</h1>
 
       <select
         value={role}
-        onChange={(e) => setRole(e.target.value)}
+        onChange={(e) =>
+          setRole(e.target.value)
+        }
         style={input}
       >
+
         <option value="customer">
           Customer
         </option>
@@ -191,9 +176,6 @@ export default function App() {
           Fundi
         </option>
 
-        <option value="admin">
-          Admin
-        </option>
       </select>
 
       <input
@@ -216,18 +198,33 @@ export default function App() {
         style={input}
       />
 
-      <button style={button} onClick={signup}>
+      <button
+        style={button}
+        onClick={signup}
+      >
         Create Account
       </button>
 
-      <button style={greenBtn} onClick={login}>
+      <button
+        style={greenBtn}
+        onClick={login}
+      >
         Login
       </button>
+
     </div>
   );
 }
 
 // STYLES
+
+const container = {
+  maxWidth: "400px",
+  margin: "auto",
+  padding: "30px",
+  fontFamily: "Arial",
+};
+
 const input = {
   width: "100%",
   padding: "12px",
@@ -237,7 +234,7 @@ const input = {
 const textarea = {
   width: "100%",
   padding: "12px",
-  height: "100px",
+  height: "120px",
   marginBottom: "10px",
 };
 
@@ -265,11 +262,4 @@ const logoutBtn = {
   background: "#dc2626",
   color: "white",
   border: "none",
-};
-
-const card = {
-  background: "white",
-  padding: "20px",
-  borderRadius: "10px",
-  marginBottom: "20px",
 };
