@@ -12,9 +12,11 @@ export default function App() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
     });
+
+    return () => unsub();
   }, []);
 
   const login = async () => {
@@ -27,7 +29,6 @@ export default function App() {
 
   const logout = () => signOut(auth);
 
-  // 🔴 LOGIN SCREEN
   if (!user) {
     return (
       <div style={{ padding: 20 }}>
@@ -37,26 +38,23 @@ export default function App() {
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
-        <br />
 
         <input
-          type="password"
           placeholder="Password"
+          type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
 
         <button onClick={login}>Login</button>
       </div>
     );
   }
 
-  // 🔵 LOGGED IN VIEW
   return (
     <div style={{ padding: 20 }}>
       <h1>FundiLink System</h1>
 
-      <p>Logged in as: {user.email}</p>
+      <p>Logged in: {user.email}</p>
 
       <button onClick={logout}>Logout</button>
     </div>
