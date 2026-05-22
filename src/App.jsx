@@ -1,7 +1,7 @@
 function App() {
   return (
-    <div>
-      <h1>FundiLink Working Successfully</h1>
+    <div style={{background:"white", height:"100vh", color:"black"}}>
+      <h1>FundiLink Working</h1>
     </div>
   )
 }
