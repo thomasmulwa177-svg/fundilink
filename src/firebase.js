@@ -2,18 +2,17 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// 🔥 PASTE ONLY YOUR REAL FIREBASE CONFIG HERE
+// 🔥 PASTE YOUR REAL CONFIG HERE FROM FIREBASE CONSOLE
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_AUTH_DOMAIN",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_STORAGE_BUCKET",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID",
 };
 
 const app = initializeApp(firebaseConfig);
 
-// 🔥 SINGLE SOURCE OF TRUTH
 export const auth = getAuth(app);
 export const db = getFirestore(app);
