@@ -1,11 +1,19 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+// 🔥 PASTE YOUR CONFIG HERE (from Firebase console)
 const firebaseConfig = {
-  apiKey: "AIzaSyAOa2Btp04MwIby6epGndMbqgu2qIkpIdQ",
-  authDomain: "fundilink-chat.firebaseapp.com",
-  databaseURL: "https://fundilink-chat-default-rtdb.firebaseio.com",
-  projectId: "fundilink-chat",
-  storageBucket: "fundilink-chat.firebasestorage.app",
-  messagingSenderId: "71381605004",
-  appId: "1:71381605004:web:9c8b12f52715083e3fb9a9",
-  measurementId: "G-1T1R4ZPHHE"
+  apiKey: "PASTE_HERE",
+  authDomain: "PASTE_HERE",
+  projectId: "PASTE_HERE",
+  storageBucket: "PASTE_HERE",
+  messagingSenderId: "PASTE_HERE",
+  appId: "PASTE_HERE",
 };
+
+const app = initializeApp(firebaseConfig);
+
+// export Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
