@@ -176,7 +176,7 @@ export default function App() {
         fontFamily: "Arial",
       }}
     >
-      <h1>FundiLink</h1>
+      <h1>FundiLink LIVE</h1>
 
       <select
         value={role}
